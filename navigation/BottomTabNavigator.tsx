@@ -45,7 +45,7 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="CreateMemory"
         component={CreateMemory}
-        options={{ headerTitle: 'Tab One Title' }}
+        options={{ headerTitle: 'Remember Me' }}
       />
     </TabOneStack.Navigator>
   );
