@@ -8,14 +8,14 @@ export default {
         screens: {
           TabOne: {
             screens: {
-              TabOneScreen: 'one',
+              CreateMemory: 'one',
             },
           },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
+          // TabTwo: {
+          //   screens: {
+          //     TabTwoScreen: 'two',
+          //   },
+          // },
         },
       },
       NotFound: '*',

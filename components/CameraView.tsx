@@ -1,22 +1,25 @@
-import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import * as WebBrowser from "expo-web-browser";
+import React from "react";
+import { StyleSheet } from "react-native";
 
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions';
-import { useState, useEffect } from 'react';
+import Colors from "../constants/Colors";
+import { MonoText } from "./StyledText";
+import { Text, View } from "./Themed";
+import { Camera } from "expo-camera";
+import * as Permissions from "expo-permissions";
+import { useState, useEffect } from "react";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { firestore } from "../services/firebase";
 
 export default function CameraView() {
-   const [hasPermission, setHasPermission] = useState(false);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [value, loading, error] = useDocumentData(firestore.doc("users/111"));
+  const type = value?.settings?.cameraType;
 
   useEffect(() => {
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
@@ -28,41 +31,20 @@ export default function CameraView() {
   }
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}>
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+      <Camera style={styles.camera} type={type}></Camera>
     </View>
-  )
+  );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
-
+    backgroundColor: "#fff",
+    // width: 150,
+    alignSelf: "stretch",
   },
   camera: {
-
+    flex: 1,
+    alignSelf: "stretch",
   },
-  button: {
-
-  },
-  text: {
-
-  }
 });
