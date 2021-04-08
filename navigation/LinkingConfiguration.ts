@@ -1,24 +1,29 @@
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
 
 export default {
-  prefixes: [Linking.makeUrl('/')],
+  prefixes: [Linking.makeUrl("/")],
   config: {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          CreateMemory: {
             screens: {
-              CreateMemory: 'one',
+              root: "create",
             },
           },
-          // TabTwo: {
-          //   screens: {
-          //     TabTwoScreen: 'two',
-          //   },
-          // },
+          SettingsTab: {
+            screens: {
+              root: "settings",
+            },
+          },
+          MemoryList: {
+            screens: {
+              root: "list",
+            },
+          },
         },
       },
-      NotFound: '*',
+      NotFound: "*",
     },
   },
 };

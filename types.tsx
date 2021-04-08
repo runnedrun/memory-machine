@@ -3,14 +3,20 @@ export type RootStackParamList = {
   NotFound: undefined;
 };
 
-export type BottomTabParamList = {
-  TabOne: undefined;
-};
-
-export type TabOneParamList = {
+export type TopTabParamList = {
+  MemoryList: undefined;
   CreateMemory: undefined;
+  SettingsTab: undefined;
 };
 
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+export type CreateMemoryParamList = {
+  root: undefined;
+};
+
+export type SettingsTabParamList = {
+  root: undefined;
+};
+
+export type MemoryListParamList = {
+  root: undefined;
 };
