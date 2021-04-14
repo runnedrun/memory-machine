@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
+import { View, Text } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -15,6 +16,10 @@ import {
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
+const EmptyTabBar = () => {
+  return <View></View>;
+};
+
 export default function TopTabNavigator() {
   const colorScheme = useColorScheme();
 
@@ -22,6 +27,7 @@ export default function TopTabNavigator() {
     <TopTab.Navigator
       initialRouteName="CreateMemory"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      tabBar={() => <EmptyTabBar></EmptyTabBar>}
     >
       <TopTab.Screen
         name="MemoryList"
@@ -48,7 +54,7 @@ const CreateMemoryStack = createStackNavigator<CreateMemoryParamList>();
 
 function CreateMemoryNavigator() {
   return (
-    <CreateMemoryStack.Navigator>
+    <CreateMemoryStack.Navigator headerMode="none">
       <CreateMemoryStack.Screen name="root" component={CreateMemory} />
     </CreateMemoryStack.Navigator>
   );
@@ -58,7 +64,7 @@ const SettingsTabStack = createStackNavigator<SettingsTabParamList>();
 
 function SettingsTabNavigator() {
   return (
-    <SettingsTabStack.Navigator>
+    <SettingsTabStack.Navigator headerMode="none">
       <SettingsTabStack.Screen name="root" component={CreateMemory} />
     </SettingsTabStack.Navigator>
   );
@@ -68,7 +74,7 @@ const MemoryListStack = createStackNavigator<MemoryListParamList>();
 
 function MemoryListNavigator() {
   return (
-    <MemoryListStack.Navigator>
+    <MemoryListStack.Navigator headerMode="none">
       <MemoryListStack.Screen name="root" component={CreateMemory} />
     </MemoryListStack.Navigator>
   );
