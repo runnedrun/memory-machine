@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { View, Text } from "react-native";
+import MemoryView from "../components/MemoryView";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -56,6 +56,7 @@ function CreateMemoryNavigator() {
   return (
     <CreateMemoryStack.Navigator headerMode="none">
       <CreateMemoryStack.Screen name="root" component={CreateMemory} />
+      <CreateMemoryStack.Screen name="editMemory" component={MemoryView} />
     </CreateMemoryStack.Navigator>
   );
 }

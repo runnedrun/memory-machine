@@ -1,4 +1,5 @@
 export type Memory = {
-  photoUrl: string | undefined;
+  photoUrl?: string;
   userId: string;
+  text?: string;
 };

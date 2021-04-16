@@ -11,11 +11,14 @@ import { useState, useEffect } from "react";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { firestore } from "../services/firebase";
 import { Pressable } from "react-native";
-import firebase from "firebase";
-import { v4 as uuidv4 } from "uuid";
-import createMemory from "../services/createMemory";
 
-export default function CameraView({ children }) {
+export default function CameraView({
+  children,
+  onPhotoTaken,
+}: {
+  children?: React.Component;
+  onPhotoTaken: (a: string) => void;
+}) {
   const [hasPermission, setHasPermission] = useState(false);
   const userId = "111";
   const [value, loading, error] = useDocumentData(
@@ -40,17 +43,8 @@ export default function CameraView({ children }) {
   let camera: Camera | null;
 
   const takePicture = async () => {
-    const ref = firebase
-      .storage()
-      .ref("user-images")
-      .child(userId)
-      .child(`${uuidv4()}`);
     const { uri } = await camera?.takePictureAsync();
-    console.log("uri", uri.slice(0, 100));
-    const dataType = uri.includes("data:image") ? "data_url" : undefined;
-    console.log("data", dataType);
-    ref.putString(uri, dataType);
-    createMemory(userId, ref.fullPath);
+    onPhotoTaken(uri);
   };
 
   return (

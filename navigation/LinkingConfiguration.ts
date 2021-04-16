@@ -9,6 +9,7 @@ export default {
           CreateMemory: {
             screens: {
               root: "create",
+              editMemory: "edit",
             },
           },
           SettingsTab: {

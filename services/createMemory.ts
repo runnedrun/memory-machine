@@ -1,8 +1,11 @@
-import { data, firestore } from "./firebase";
+import { data } from "./firebase";
 
 export default (userId: string, photoUrl: string) => {
-  return data.memories.doc().set({
-    user: userId,
-    photoUrl,
-  });
+  const ref = data.memories.doc();
+  return ref
+    .set({
+      userId,
+      photoUrl,
+    })
+    .then(() => ref.id);
 };
