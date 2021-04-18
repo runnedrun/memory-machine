@@ -18,7 +18,7 @@ export default function CreateMemory({
   const [activeMemory, activeMemoryId] = useActiveMemory();
 
   let textView = <View />;
-  if (editable && activeMemoryId) {
+  if (editable && activeMemory) {
     textView = (
       <TextInput
         style={styles.textInput}

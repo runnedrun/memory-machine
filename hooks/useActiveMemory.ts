@@ -10,11 +10,18 @@ export default (): [Memory | undefined, string | undefined] => {
   console.log("meme", activeMemoryId);
 
   if (!activeMemoryId && !loading && !error) {
-    const newMemoryId = data.memories.doc().id;
-    console.log("creating new active", newMemoryId);
-    data.userSettings
-      .doc(currentUserId)
-      .set({ activeMemory: newMemoryId }, { merge: true });
+    const newMemoryDoc = data.memories.doc();
+    console.log("creating new active");
+    Promise.all([
+      data.userSettings
+        .doc(currentUserId)
+        .set({ activeMemory: newMemoryDoc.id }, { merge: true }),
+
+      newMemoryDoc.set({
+        userId: currentUserId,
+        text: "",
+      }),
+    ]);
   }
 
   return [activeMemory, activeMemoryId];
