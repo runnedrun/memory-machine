@@ -10,6 +10,7 @@ export type TopTabParamList = {
   MemoryList: undefined;
   CreateMemory: undefined;
   SettingsTab: undefined;
+  Login: undefined;
 };
 
 export type CreateMemoryParamList = {
@@ -39,3 +40,8 @@ export type SettingsTabParamList = {
 export type MemoryListParamList = {
   root: undefined;
 };
+
+export type MemoryListNavigationProp = StackNavigationProp<
+  MemoryListParamList,
+  "root"
+>;

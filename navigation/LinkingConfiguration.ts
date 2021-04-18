@@ -6,6 +6,7 @@ export default {
     screens: {
       Root: {
         screens: {
+          Login: "login",
           CreateMemory: {
             screens: {
               root: "create",

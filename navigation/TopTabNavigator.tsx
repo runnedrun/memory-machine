@@ -1,12 +1,17 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { View, Text } from "react-native";
 import MemoryView from "../components/MemoryView";
+import firebase from "firebase";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
+import useCurrentUserId from "../hooks/useCurrentUserId";
 import CreateMemory from "../screens/CreateMemory";
+import Login from "../screens/Login";
+import MemoryList from "../screens/MemoryList";
 import {
   TopTabParamList,
   CreateMemoryParamList,
@@ -22,13 +27,10 @@ const EmptyTabBar = () => {
 
 export default function TopTabNavigator() {
   const colorScheme = useColorScheme();
+  const [user, loading] = useAuthState(firebase.auth());
 
-  return (
-    <TopTab.Navigator
-      initialRouteName="CreateMemory"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
-      tabBar={() => <EmptyTabBar></EmptyTabBar>}
-    >
+  let routes = (
+    <>
       <TopTab.Screen
         name="MemoryList"
         component={MemoryListNavigator}
@@ -44,6 +46,24 @@ export default function TopTabNavigator() {
         component={SettingsTabNavigator}
         options={{}}
       />
+    </>
+  );
+
+  if (!user && !loading) {
+    routes = (
+      <>
+        <TopTab.Screen name="Login" component={Login} options={{}} />
+      </>
+    );
+  }
+
+  return (
+    <TopTab.Navigator
+      initialRouteName="CreateMemory"
+      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      tabBar={() => <EmptyTabBar></EmptyTabBar>}
+    >
+      {routes}
     </TopTab.Navigator>
   );
 }
@@ -76,7 +96,7 @@ const MemoryListStack = createStackNavigator<MemoryListParamList>();
 function MemoryListNavigator() {
   return (
     <MemoryListStack.Navigator headerMode="none">
-      <MemoryListStack.Screen name="root" component={CreateMemory} />
+      <MemoryListStack.Screen name="root" component={MemoryList} />
     </MemoryListStack.Navigator>
   );
 }
