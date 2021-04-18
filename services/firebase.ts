@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { Memory } from "./datatypes";
+import { Memory, Settings } from "./datatypes";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 const firebaseConfig = {
@@ -29,14 +29,18 @@ export const data = {
   memories: firestore
     .collection("memories")
     .withConverter(buildConverterForType<Memory>()),
+  userSettings: firestore
+    .collection("settings")
+    .withConverter(buildConverterForType<Settings>()),
 };
 
 const buildGetter = <Type>(
   collection: firebase.firestore.CollectionReference<Type>,
-) => (id: string) => useDocumentData<Type>(collection.doc(id));
+) => (id: string | undefined) => useDocumentData<Type>(collection.doc(id));
 
 export const getters = {
   memories: buildGetter(data.memories),
+  userSettings: buildGetter(data.userSettings),
 };
 
 export default firebase;

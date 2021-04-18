@@ -1,51 +1,41 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
 
-import CameraView from "../components/CameraView";
 import { View } from "../components/Themed";
-import Topbar from "../components/TopBar";
-import firebase from "firebase";
+import { TextInput, Text } from "react-native";
 import { CreateMemoryNavigationProp } from "../types";
-import { v4 as uuidv4 } from "uuid";
-import createMemory from "../services/createMemory";
 import { useState } from "react";
+import useActiveMemory from "../hooks/useActiveMemory";
+import { updateText } from "../services/memories";
 
 export default function CreateMemory({
   navigation,
+  editable = true,
 }: {
   navigation: CreateMemoryNavigationProp;
+  editable: Boolean;
 }) {
-  const userId = "111";
+  const [activeMemory, activeMemoryId] = useActiveMemory();
 
-  const [isActive, setIsActive] = useState(false);
+  let textView = <View />;
+  if (editable && activeMemoryId) {
+    textView = (
+      <TextInput
+        style={styles.textInput}
+        multiline={true}
+        onChangeText={text =>
+          activeMemoryId && updateText(activeMemoryId, text)
+        }
+        value={activeMemory?.text}
+        blurOnSubmit
+        placeholder="What's on your mind"
+      />
+    );
+  } else {
+    textView = <Text>{activeMemory?.text}</Text>;
+  }
 
-  navigation.addListener("blur", () => setIsActive(false));
-  navigation.addListener("focus", () => setIsActive(true));
-
-  const uploadPhotoAndCreateMemory = (uri: string) => {
-    const ref = firebase
-      .storage()
-      .ref("user-images")
-      .child(userId)
-      .child(`${uuidv4()}`);
-
-    const dataType = uri.includes("data:image") ? "data_url" : undefined;
-    ref.putString(uri, dataType);
-    createMemory(userId, ref.fullPath).then(id => {
-      navigation.navigate("editMemory", { id });
-    });
-  };
-
-  let view = isActive ? (
-    <View style={styles.container}>
-      <Topbar></Topbar>
-      <CameraView onPhotoTaken={uploadPhotoAndCreateMemory} />
-    </View>
-  ) : (
-    <View></View>
-  );
-
-  return <View style={styles.container}>{view}</View>;
+  return <View style={styles.container}>{textView}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -55,13 +45,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  textInput: {
+    height: "100%",
+    width: "100%",
   },
 });
