@@ -8,7 +8,6 @@ import firebase from "firebase";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import useCurrentUserId from "../hooks/useCurrentUserId";
 import CreateMemory from "../screens/CreateMemory";
 import Login from "../screens/Login";
 import MemoryList from "../screens/MemoryList";
@@ -19,53 +18,67 @@ import {
   MemoryListParamList,
 } from "../types";
 
+import { UserIdContextProvider } from "../contexts/UserIdContext";
+
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 const EmptyTabBar = () => {
   return <View></View>;
 };
 
-export default function TopTabNavigator() {
+const Navigator = ({ children }) => {
   const colorScheme = useColorScheme();
-  const [user, loading] = useAuthState(firebase.auth());
-
-  let routes = (
-    <>
-      <TopTab.Screen
-        name="MemoryList"
-        component={MemoryListNavigator}
-        options={{}}
-      />
-      <TopTab.Screen
-        name="CreateMemory"
-        component={CreateMemoryNavigator}
-        options={{}}
-      />
-      <TopTab.Screen
-        name="SettingsTab"
-        component={SettingsTabNavigator}
-        options={{}}
-      />
-    </>
-  );
-
-  if (!user && !loading) {
-    routes = (
-      <>
-        <TopTab.Screen name="Login" component={Login} options={{}} />
-      </>
-    );
-  }
-
   return (
     <TopTab.Navigator
       initialRouteName="CreateMemory"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
       tabBar={() => <EmptyTabBar></EmptyTabBar>}
     >
-      {routes}
+      {children}
     </TopTab.Navigator>
   );
+};
+
+export default function TopTabNavigator() {
+  const [user, loading] = useAuthState(firebase.auth());
+
+  if (!loading) {
+    if (!user) {
+      return (
+        <Navigator>
+          <TopTab.Screen name="Login" component={Login} options={{}} />
+        </Navigator>
+      );
+    }
+
+    return (
+      <UserIdContextProvider value={"111"}>
+        <Navigator>
+          <TopTab.Screen
+            name="MemoryList"
+            component={MemoryListNavigator}
+            options={{}}
+          />
+          <TopTab.Screen
+            name="CreateMemory"
+            component={CreateMemoryNavigator}
+            options={{}}
+          />
+          <TopTab.Screen
+            name="SettingsTab"
+            component={SettingsTabNavigator}
+            options={{}}
+          />
+        </Navigator>
+      </UserIdContextProvider>
+    );
+  } else {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:

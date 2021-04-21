@@ -1,4 +1,5 @@
 export type Memory = {
+  icons?: string[];
   photoUrl?: string;
   userId: string;
   text?: string;

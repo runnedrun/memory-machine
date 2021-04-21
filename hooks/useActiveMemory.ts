@@ -1,8 +1,10 @@
 import { data, getters } from "../services/firebase";
 import { Memory } from "../services/datatypes";
+import { useContext } from "react";
+import { UserIdContext } from "../contexts/UserIdContext";
 
-const currentUserId = "111";
 export default (): [Memory | undefined, string | undefined] => {
+  const currentUserId = useContext(UserIdContext);
   const [userSettings, loading, error] = getters.userSettings(currentUserId);
   const activeMemoryId = userSettings?.activeMemory;
   const [activeMemory] = getters.memories(activeMemoryId);

@@ -13,7 +13,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-export const firestore = firebase.firestore();
+export const firestore = firebase.firestore;
+
+const db = firestore();
 
 function buildConverterForType<
   Type
@@ -26,10 +28,10 @@ function buildConverterForType<
 }
 
 export const data = {
-  memories: firestore
+  memories: db
     .collection("memories")
     .withConverter(buildConverterForType<Memory>()),
-  userSettings: firestore
+  userSettings: db
     .collection("settings")
     .withConverter(buildConverterForType<Settings>()),
 };

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import { StyleSheet } from "react-native";
 
 import { View } from "../components/Themed";
@@ -7,14 +8,16 @@ import { data } from "../services/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { Memory } from "../services/datatypes";
 import MemoryListItem from "../components/MemoryListItem";
+import { UserIdContext } from "../contexts/UserIdContext";
 
 export default function MemoryList({
   navigation,
-  currentUserId,
 }: {
   navigation: MemoryListNavigationProp;
   currentUserId: string;
 }) {
+  const currentUserId = useContext(UserIdContext);
+
   const [memoriesSnap] = useCollection<Memory>(
     data.memories.where("userId", "==", currentUserId),
   );
