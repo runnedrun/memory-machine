@@ -7,6 +7,7 @@ import useActiveMemory from "../hooks/useActiveMemory";
 import { updateText } from "../services/memories";
 import TopBar from "../components/TopBar";
 import Emoji from "react-native-emoji";
+import ColorBar from "../components/ColorBar";
 
 export default function CreateMemory({
   editable = true,
@@ -57,7 +58,9 @@ export default function CreateMemory({
         </View>
         {textView}
       </View>
-      <View style={styles.otherSection}></View>
+      <View style={styles.otherSection}>
+        <ColorBar memory={activeMemory} memoryId={activeMemoryId}></ColorBar>
+      </View>
     </View>
   );
 }
