@@ -1,6 +1,4 @@
 export type ColorData = {
-  start: number;
-  end: number;
   color: string;
 };
 
@@ -9,7 +7,7 @@ export type Memory = {
   photoUrl?: string;
   userId: string;
   text?: string;
-  colors?: ColorData[];
+  colors?: Record<number, ColorData>;
 };
 
 export type Settings = {

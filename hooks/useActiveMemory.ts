@@ -5,25 +5,30 @@ import { UserIdContext } from "../contexts/UserIdContext";
 
 export default (): [Memory | undefined, string | undefined] => {
   const currentUserId = useContext(UserIdContext);
-  const [userSettings, loading, error] = getters.userSettings(currentUserId);
+  const [userSettings, memoryIdLoading, memoryIdError] = getters.userSettings(
+    currentUserId,
+  );
   const activeMemoryId = userSettings?.activeMemory;
-  const [activeMemory] = getters.memories(activeMemoryId);
+  const [activeMemory, memoryLoading, memoryError] = getters.memories(
+    activeMemoryId,
+  );
 
   console.log("meme", activeMemoryId);
 
-  if (!activeMemoryId && !loading && !error) {
+  if (!activeMemoryId && !memoryIdLoading && !memoryIdError) {
     const newMemoryDoc = data.memories.doc();
-    console.log("creating new active");
-    Promise.all([
-      data.userSettings
-        .doc(currentUserId)
-        .set({ activeMemory: newMemoryDoc.id }, { merge: true }),
+    data.userSettings
+      .doc(currentUserId)
+      .set({ activeMemory: newMemoryDoc.id }, { merge: true });
+  }
 
-      newMemoryDoc.set({
-        userId: currentUserId,
-        text: "",
-      }),
-    ]);
+  console.log("mloading", memoryLoading, activeMemory, activeMemoryId);
+  if (!activeMemory && !memoryLoading && !memoryError && activeMemoryId) {
+    console.log("creating moemeor", memoryIdLoading);
+    // data.memories.doc(activeMemoryId).set({
+    //   userId: currentUserId,
+    //   text: "",
+    // });
   }
 
   return [activeMemory, activeMemoryId];
