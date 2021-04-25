@@ -25,10 +25,10 @@ export default (): [Memory | undefined, string | undefined] => {
   console.log("mloading", memoryLoading, activeMemory, activeMemoryId);
   if (!activeMemory && !memoryLoading && !memoryError && activeMemoryId) {
     console.log("creating moemeor", memoryIdLoading);
-    // data.memories.doc(activeMemoryId).set({
-    //   userId: currentUserId,
-    //   text: "",
-    // });
+    data.memories.doc(activeMemoryId).set({
+      userId: currentUserId,
+      text: "",
+    });
   }
 
   return [activeMemory, activeMemoryId];

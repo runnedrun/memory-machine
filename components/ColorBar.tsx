@@ -64,13 +64,6 @@ const ColorBar = ({
     <canvas ref={handleCanvas} style={{ height: "100%", width: "100%" }} />
   );
 
-  // const canvasEl =
-  //   Platform.OS === "web" ? (
-  //     <canvas ref={handleCanvas} />
-  //   ) : (
-  //     <Canvas ref={handleCanvas} />
-  //   );
-
   return (
     <View
       style={styles.container}
@@ -82,26 +75,6 @@ const ColorBar = ({
       }}
     >
       {canvasEl}
-      {/* {Object.keys(colors).map(strCoordinate => {
-        const numCoordinate = Number(strCoordinate);
-        const colorData = colors[numCoordinate];
-        const color = colorData.color;
-        const top = height * (numCoordinate / 100);
-        console.log("what?", height, color, strCoordinate);
-
-        return (
-          <View
-            key={strCoordinate}
-            style={{
-              backgroundColor: color,
-              position: "absolute",
-              top,
-              height: colorBarHeight,
-              width: "100%",
-            }}
-          ></View>
-        );
-      })} */}
     </View>
   );
 };
