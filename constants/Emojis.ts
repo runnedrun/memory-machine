@@ -3,9 +3,9 @@ export default [
   "smiley",
   "no_good",
   "full_moon",
-  "sweat_smile",
+  // "sweat_smile",
   "innocent",
   "cloud",
-  "thunder_cloud_and_rain",
-  "glass_of_milk",
+  // "thunder_cloud_and_rain",
+  // "glass_of_milk",
 ];

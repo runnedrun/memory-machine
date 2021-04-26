@@ -1,13 +1,10 @@
 import * as React from "react";
 import { GestureResponderEvent, StyleSheet } from "react-native";
-import { data } from "../services/firebase";
+import { data, getters } from "../services/firebase";
 import { Memory } from "../services/datatypes";
 import { View } from "./Themed";
-import { Platform } from "react-native";
-import { ScreenStackHeaderRightView } from "react-native-screens";
-
-const Canvas =
-  Platform.OS === "web" ? null : require("react-native-canvas").Canvas;
+import { UserIdContext } from "../contexts/UserIdContext";
+import colorBarColors, { defaultColor } from "../constants/colorBarColors";
 
 const colorBarIncrement = 5;
 
@@ -18,6 +15,9 @@ const ColorBar = ({
   memoryId: string;
   memory: Memory;
 }) => {
+  const currentUserId = React.useContext(UserIdContext);
+  const [userSettings] = getters.userSettings(currentUserId);
+  const selectedColor = userSettings?.selectedColor || defaultColor;
   const [height, setHeight] = React.useState(0);
   const colors = memory.colors || {};
 
@@ -29,7 +29,7 @@ const ColorBar = ({
     const bucketed = unbucketed - remainder;
 
     colors[bucketed] = {
-      color: "red",
+      color: selectedColor,
     };
 
     data.memories.doc(memoryId).set(
@@ -39,30 +39,6 @@ const ColorBar = ({
       { merge: true },
     );
   };
-
-  const handleCanvas = (canvas: any) => {
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const width = canvas.width;
-    const height = canvas.height;
-    console.log("ehgiht", height);
-    const colorBarHeight = (height / 100) * colorBarIncrement;
-    Object.keys(colors).map(strCoordinate => {
-      const numCoordinate = Number(strCoordinate);
-      const colorData = colors[numCoordinate];
-      const color = colorData.color;
-      const top = height * (numCoordinate / 100);
-      console.log("what?", height, color, strCoordinate);
-      ctx.fillStyle = color;
-      ctx.fillRect(0, top, width, colorBarHeight);
-    });
-  };
-
-  const canvasEl = Canvas ? (
-    <Canvas ref={handleCanvas} style={styles.canvas} />
-  ) : (
-    <canvas ref={handleCanvas} style={{ height: "100%", width: "100%" }} />
-  );
 
   return (
     <View
@@ -74,7 +50,27 @@ const ColorBar = ({
         setHeight(height);
       }}
     >
-      {canvasEl}
+      {Object.keys(colors).map(strCoordinate => {
+        const numCoordinate = Number(strCoordinate);
+        const colorData = colors[numCoordinate];
+        const color = colorData.color;
+        const colorCode = colorBarColors[color];
+        const top = height * (numCoordinate / 100);
+        const colorBarHeight = height * (colorBarIncrement / 100);
+
+        return (
+          <View
+            key={strCoordinate}
+            style={{
+              backgroundColor: colorCode,
+              position: "absolute",
+              top,
+              height: colorBarHeight,
+              width: "100%",
+            }}
+          ></View>
+        );
+      })}
     </View>
   );
 };

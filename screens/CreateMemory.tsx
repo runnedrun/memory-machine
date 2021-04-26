@@ -58,7 +58,7 @@ export default function CreateMemory({
         </View>
         {textView}
       </View>
-      <View style={styles.otherSection}>
+      <View style={styles.colorBar}>
         <ColorBar memory={activeMemory} memoryId={activeMemoryId}></ColorBar>
       </View>
     </View>
@@ -75,7 +75,10 @@ const styles = StyleSheet.create({
   },
   textAndTopBarContainer: {
     flexGrow: 1,
+    flexShrink: 1,
     height: "100%",
+    position: "relative",
+    width: 0,
   },
   textInput: {
     height: "100%",
@@ -84,8 +87,6 @@ const styles = StyleSheet.create({
   topbarContainer: {
     marginBottom: 10,
     marginTop: 10,
-    border: "0px 2px 2px 2px",
-    borderColor: "black",
     borderRadius: 5,
   },
   emojiContainer: {
@@ -98,5 +99,5 @@ const styles = StyleSheet.create({
   singleEmojiContainer: {
     marginBottom: 10,
   },
-  otherSection: { width: sideSectionWidth },
+  colorBar: { width: sideSectionWidth, flexShrink: 0 },
 });

@@ -1,35 +1,24 @@
-import { data, getters } from "../services/firebase";
+import { data } from "../services/firebase";
 import { Memory } from "../services/datatypes";
-import { useContext } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { UserIdContext } from "../contexts/UserIdContext";
+import { useContext } from "react";
 
 export default (): [Memory | undefined, string | undefined] => {
   const currentUserId = useContext(UserIdContext);
-  const [userSettings, memoryIdLoading, memoryIdError] = getters.userSettings(
-    currentUserId,
-  );
-  const activeMemoryId = userSettings?.activeMemory;
-  const [activeMemory, memoryLoading, memoryError] = getters.memories(
-    activeMemoryId,
+  const [querySnapshot, loading] = useCollection<Memory>(
+    data.memories.where("active", "==", true),
   );
 
-  console.log("meme", activeMemoryId);
+  const activeMemory = querySnapshot?.docs[0];
 
-  if (!activeMemoryId && !memoryIdLoading && !memoryIdError) {
-    const newMemoryDoc = data.memories.doc();
-    data.userSettings
-      .doc(currentUserId)
-      .set({ activeMemory: newMemoryDoc.id }, { merge: true });
-  }
-
-  console.log("mloading", memoryLoading, activeMemory, activeMemoryId);
-  if (!activeMemory && !memoryLoading && !memoryError && activeMemoryId) {
-    console.log("creating moemeor", memoryIdLoading);
-    data.memories.doc(activeMemoryId).set({
+  if (!loading && !activeMemory) {
+    console.log("creating new mem");
+    data.memories.doc().set({
+      active: true,
       userId: currentUserId,
-      text: "",
     });
   }
 
-  return [activeMemory, activeMemoryId];
+  return [activeMemory?.data(), activeMemory?.id];
 };
