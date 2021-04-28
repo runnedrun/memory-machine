@@ -1,5 +1,6 @@
 export type ColorData = {
   color: string;
+  depth: number;
 };
 
 export type Memory = {
@@ -14,4 +15,5 @@ export type Memory = {
 export type Settings = {
   cameraDirection?: string;
   selectedColor?: string;
+  activeMemory?: string;
 };

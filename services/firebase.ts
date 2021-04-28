@@ -1,6 +1,6 @@
 import firebase from "firebase";
 import { Memory, Settings } from "./datatypes";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDAtCTUhL_22DRLMbAGE9igcg3fEXWzTxQ",
@@ -36,9 +36,21 @@ export const data = {
     .withConverter(buildConverterForType<Settings>()),
 };
 
+const m = data.memories.doc("1");
+
 const buildGetter = <Type>(
   collection: firebase.firestore.CollectionReference<Type>,
-) => (id: string | undefined) => useDocumentData<Type>(collection.doc(id));
+) => (
+  id: string | undefined,
+): [
+  Type | undefined,
+  string | undefined,
+  boolean,
+  firebase.FirebaseError | undefined,
+] => {
+  const [snap, loading, error] = useDocument<Type>(collection.doc(id));
+  return [snap?.data(), snap?.id, loading, error];
+};
 
 export const getters = {
   memories: buildGetter(data.memories),

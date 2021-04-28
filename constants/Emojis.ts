@@ -1,11 +1,11 @@
 export default [
   "sunny",
   "smiley",
-  "no_good",
+  "cloud",
+  // "no_good",
   "full_moon",
   // "sweat_smile",
-  "innocent",
-  "cloud",
+  // "innocent",
   // "thunder_cloud_and_rain",
   // "glass_of_milk",
 ];

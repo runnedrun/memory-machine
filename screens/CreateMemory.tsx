@@ -8,13 +8,14 @@ import { updateText } from "../services/memories";
 import TopBar from "../components/TopBar";
 import Emoji from "react-native-emoji";
 import ColorBar from "../components/ColorBar";
+import { getters } from "../services/firebase";
 
 export default function CreateMemory({
   editable = true,
 }: {
   editable: Boolean;
 }) {
-  const [activeMemory, activeMemoryId] = useActiveMemory();
+  const [activeMemory, activeMemoryId, newActiveMemory] = useActiveMemory();
 
   if (!activeMemoryId || !activeMemory) {
     return <View />;
@@ -54,12 +55,15 @@ export default function CreateMemory({
       </View>
       <View style={styles.textAndTopBarContainer}>
         <View style={styles.topbarContainer}>
-          <TopBar memoryId={activeMemoryId}></TopBar>
+          <TopBar
+            triggerSave={newActiveMemory}
+            memoryId={activeMemoryId}
+          ></TopBar>
         </View>
         {textView}
       </View>
       <View style={styles.colorBar}>
-        <ColorBar memory={activeMemory} memoryId={activeMemoryId}></ColorBar>
+        <ColorBar memoryId={activeMemoryId}></ColorBar>
       </View>
     </View>
   );

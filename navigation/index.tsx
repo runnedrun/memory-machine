@@ -11,6 +11,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
 import TopTabNavigator from "./TopTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { SingletonHooksContainer } from "react-singleton-hook";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -25,6 +26,7 @@ export default function Navigation({
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
       <RootNavigator />
+      <SingletonHooksContainer />
     </NavigationContainer>
   );
 }

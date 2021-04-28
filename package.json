@@ -46,6 +46,7 @@
     "react-native-tab-view": "^3.0.1",
     "react-native-web": "~0.13.12",
     "react-native-webview": "^11.4.2",
+    "react-singleton-hook": "^3.1.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -1,24 +1,57 @@
-import { data } from "../services/firebase";
+import { data, getters } from "../services/firebase";
 import { Memory } from "../services/datatypes";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { UserIdContext } from "../contexts/UserIdContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { singletonHook } from "react-singleton-hook";
 
-export default (): [Memory | undefined, string | undefined] => {
+const useActiveMemory = (): [
+  Memory | undefined,
+  string | undefined,
+  () => void,
+] => {
   const currentUserId = useContext(UserIdContext);
-  const [querySnapshot, loading] = useCollection<Memory>(
-    data.memories.where("active", "==", true),
+  console.log("currenUSerId", currentUserId);
+  if (!currentUserId) return [undefined, undefined, () => {}];
+  const [userSettings, memoryIdLoading, memoryIdError] = getters.userSettings(
+    currentUserId,
+  );
+  const activeMemoryId = userSettings?.activeMemory;
+  const [activeMemory, id, memoryLoading, memoryError] = getters.memories(
+    activeMemoryId,
   );
 
-  const activeMemory = querySnapshot?.docs[0];
+  const newActiveMemory = () => {
+    const newMemoryDoc = data.memories.doc();
+    data.userSettings
+      .doc(currentUserId)
+      .set({ activeMemory: newMemoryDoc.id }, { merge: true });
+  };
 
-  if (!loading && !activeMemory) {
-    console.log("creating new mem");
-    data.memories.doc().set({
-      active: true,
-      userId: currentUserId,
-    });
-  }
+  useEffect(() => {
+    if (!activeMemoryId && !memoryIdLoading && !memoryIdError) {
+      newActiveMemory();
+    }
+  }, [activeMemoryId, memoryIdLoading, memoryIdError]);
 
-  return [activeMemory?.data(), activeMemory?.id];
+  useEffect(() => {
+    console.log(
+      "running again",
+      activeMemory,
+      activeMemoryId,
+      memoryLoading,
+      memoryError,
+    );
+    if (!activeMemory && !memoryLoading && !memoryError && activeMemoryId) {
+      console.log("creating");
+      // data.memories.doc(activeMemoryId).set({
+      //   userId: currentUserId,
+      //   text: "",
+      // });
+    }
+  }, [activeMemory, memoryLoading, memoryError, activeMemoryId]);
+
+  return [activeMemory, activeMemoryId, newActiveMemory];
 };
+
+export default singletonHook([undefined, undefined, () => {}], useActiveMemory);

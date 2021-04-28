@@ -1,10 +1,13 @@
 export const defaultColor = "transparent";
 
-const colors: Record<string, string> = {
-  red: "rgba(255,0,0, .2)",
-  blue: "rgba(0,0,255, .2)",
-  yellow: "rgba(255,255,0, .2)",
-  transparent: "transparent",
+const buildColorFunction = (decimal: string) => (depth: number) =>
+  `rgba(${decimal},${depth})`;
+const colors: Record<string, (depth: number) => string> = {
+  red: buildColorFunction("255,0,0"),
+  blue: buildColorFunction("0,0,255"),
+  yellow: buildColorFunction("255,255,0"),
+  purple: buildColorFunction("255,0,255"),
+  transparent: () => "transparent",
 };
 
 export const colorList = Object.keys(colors).filter(_ => _ !== "transparent");

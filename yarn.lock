@@ -7614,6 +7614,11 @@ react-refresh@^0.4.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.4.3.tgz#966f1750c191672e76e16c2efa569150cc73ab53"
   integrity sha512-Hwln1VNuGl/6bVwnd0Xdn1e84gT/8T9aYNL+HAKDArLCS7LWjwr7StE30IEYbIkx0Vi3vs+coQxe+SQDbGbbpA==
 
+react-singleton-hook@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-singleton-hook/-/react-singleton-hook-3.1.1.tgz#5fcdd91bb09fcdaba30eeb8af22a68077bbe614b"
+  integrity sha512-OKsg1WhixObLoH2xpkxXjmeYE8VlIolHlbvmb7yOs+5qeIUtYYTJ9pADEsplVsbplpe+lnqRGP5vtnxgbV4naA==
+
 react-test-renderer@~16.11.0:
   version "16.11.0"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.11.0.tgz#72574566496462c808ac449b0287a4c0a1a7d8f8"

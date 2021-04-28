@@ -1,48 +1,64 @@
 import * as React from "react";
 import { GestureResponderEvent, StyleSheet } from "react-native";
 import { data, getters } from "../services/firebase";
-import { Memory } from "../services/datatypes";
 import { View } from "./Themed";
 import { UserIdContext } from "../contexts/UserIdContext";
 import colorBarColors, { defaultColor } from "../constants/colorBarColors";
+import useDebouncedFirebase from "../hooks/useDebouncedFirebase";
 
-const colorBarIncrement = 5;
+const colorBarIncrement = 3;
 
-const ColorBar = ({
-  memoryId,
-  memory,
-}: {
-  memoryId: string;
-  memory: Memory;
-}) => {
+const ColorBar = ({ memoryId }: { memoryId: string }) => {
   const currentUserId = React.useContext(UserIdContext);
   const [userSettings] = getters.userSettings(currentUserId);
+  const [lastColorBucket, setLastColorBucket] = React.useState({
+    value: -1,
+    time: Date.now(),
+  });
   const selectedColor = userSettings?.selectedColor || defaultColor;
+  const [memory, setMemory] = useDebouncedFirebase(data.memories.doc(memoryId));
   const [height, setHeight] = React.useState(0);
-  const colors = memory.colors || {};
+  const colors = memory?.colors || {};
 
   const addColorBar = (e: GestureResponderEvent) => {
+    console.log("e", e.nativeEvent.locationY);
     const coordinate = e.nativeEvent.locationY;
     const percent = coordinate / height;
     const unbucketed = percent * 100;
     const remainder = unbucketed % colorBarIncrement;
     const bucketed = unbucketed - remainder;
 
-    colors[bucketed] = {
+    if (
+      bucketed === lastColorBucket.value &&
+      Date.now() - lastColorBucket.time < 500
+    ) {
+      return;
+    }
+
+    const existingColorData = colors[bucketed];
+    console.log("buck", existingColorData);
+    const newDepth =
+      selectedColor === existingColorData?.color
+        ? Math.min(existingColorData?.depth + 0.1, 1)
+        : 0.1;
+    const newColorData = {
+      depth: newDepth,
       color: selectedColor,
     };
 
-    data.memories.doc(memoryId).set(
-      {
-        colors: colors,
-      },
-      { merge: true },
-    );
+    colors[bucketed] = newColorData;
+
+    setLastColorBucket({ value: bucketed, time: Date.now() });
+
+    setMemory({
+      colors: colors,
+    });
   };
 
   return (
     <View
       style={styles.container}
+      onResponderGrant={addColorBar}
       onStartShouldSetResponder={() => true}
       onResponderMove={addColorBar}
       onLayout={event => {
@@ -54,7 +70,8 @@ const ColorBar = ({
         const numCoordinate = Number(strCoordinate);
         const colorData = colors[numCoordinate];
         const color = colorData.color;
-        const colorCode = colorBarColors[color];
+        const depth = colorData.depth;
+        const colorCode = colorBarColors[color](depth);
         const top = height * (numCoordinate / 100);
         const colorBarHeight = height * (colorBarIncrement / 100);
 
