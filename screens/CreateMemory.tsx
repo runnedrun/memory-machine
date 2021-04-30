@@ -15,7 +15,9 @@ export default function CreateMemory({
 }: {
   editable: Boolean;
 }) {
-  const [activeMemory, activeMemoryId, newActiveMemory] = useActiveMemory();
+  const [activeMemory, activeMemoryId, newActiveMemory] = useActiveMemory({
+    createIfNotExist: true,
+  });
 
   if (!activeMemoryId || !activeMemory) {
     return <View />;
