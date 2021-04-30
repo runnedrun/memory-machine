@@ -10,9 +10,12 @@ const useActiveMemory = ({
 } = {}): [Memory | undefined, string | undefined, () => void] => {
   const currentUserId = useContext(UserIdContext);
   if (!currentUserId) return [undefined, undefined, () => {}];
-  const [userSettings, memoryIdLoading, memoryIdError] = getters.userSettings(
-    currentUserId,
-  );
+  const [
+    userSettings,
+    userId,
+    memoryIdLoading,
+    memoryIdError,
+  ] = getters.userSettings(currentUserId);
   const activeMemoryId = userSettings?.activeMemory;
   const [activeMemory, id, memoryLoading, memoryError] = getters.memories(
     activeMemoryId,
@@ -26,10 +29,15 @@ const useActiveMemory = ({
   };
 
   useEffect(() => {
-    if (!activeMemoryId && !memoryIdLoading && !memoryIdError) {
+    if (
+      !activeMemoryId &&
+      !memoryIdLoading &&
+      !memoryIdError &&
+      createIfNotExist
+    ) {
       newActiveMemory();
     }
-  }, [activeMemoryId, memoryIdLoading, memoryIdError]);
+  }, [activeMemoryId, memoryIdLoading, memoryIdError, createIfNotExist]);
 
   useEffect(() => {
     if (
@@ -44,7 +52,13 @@ const useActiveMemory = ({
         text: "",
       });
     }
-  }, [activeMemory, memoryLoading, memoryError, activeMemoryId]);
+  }, [
+    activeMemory,
+    memoryLoading,
+    memoryError,
+    activeMemoryId,
+    createIfNotExist,
+  ]);
 
   return [activeMemory, activeMemoryId, newActiveMemory];
 };

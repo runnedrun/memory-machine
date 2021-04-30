@@ -9,7 +9,6 @@ export type Memory = {
   userId: string;
   text?: string;
   colors?: Record<number, ColorData>;
-  active?: boolean;
 };
 
 export type Settings = {

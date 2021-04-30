@@ -21,7 +21,6 @@ const ColorBar = ({ memoryId }: { memoryId: string }) => {
   const colors = memory?.colors || {};
 
   const addColorBar = (e: GestureResponderEvent) => {
-    console.log("e", e.nativeEvent.locationY);
     const coordinate = e.nativeEvent.locationY;
     const percent = coordinate / height;
     const unbucketed = percent * 100;
@@ -36,7 +35,6 @@ const ColorBar = ({ memoryId }: { memoryId: string }) => {
     }
 
     const existingColorData = colors[bucketed];
-    console.log("buck", existingColorData);
     const newDepth =
       selectedColor === existingColorData?.color
         ? Math.min(existingColorData?.depth + 0.1, 1)
